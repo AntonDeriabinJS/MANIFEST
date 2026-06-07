@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Общество Духовной Сборки</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Philosopher:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #f5f0e1;
+            --bg-light: #e8e0d0;
+            --bg-card: #f0ebe0;
+            --accent-green: #2d6a4f;
+            --accent-olive: #52796f;
+            --accent-gold: #b8860b;
+            --accent-warm: #8b6914;
+            --text-dark: #1a1a1a;
+            --text-body: #3d3d3d;
+            --text-muted: #6b6b6b;
+            --glow-green: rgba(45, 106, 79, 0.15);
+            --glow-gold: rgba(184, 134, 11, 0.2);
+            --border-light: #d4c9b0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: var(--bg-cream);
+            color: var(--text-body);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ============ ANIMATED BACKGROUND LEAVES ============ */
+        .bg-leaves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            opacity: 0;
+            animation: floatLeaf var(--duration) ease-in-out infinite;
+        }
+
+        .leaf::before {
+            content: '🍃';
+            font-size: var(--size);
+            filter: grayscale(0.3) opacity(0.4);
+        }
+
+        @keyframes floatLeaf {
+            0% { opacity: 0; transform: translateY(0) rotate(0deg) translateX(0); }
+            10% { opacity: var(--max-opacity); }
+            50% { transform: translateY(-50vh) rotate(180deg) translateX(30px); }
+            90% { opacity: var(--max-opacity); }
+            100% { opacity: 0; transform: translateY(-100vh) rotate(360deg) translateX(-20px); }
+        }
+
+        /* ============ HEADER ============ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 2rem;
+            background: linear-gradient(180deg, #e8e0d0 0%, #f5f0e1 50%, #e8e0d0 100%);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(45,106,79,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(184,134,11,0.06) 0%, transparent 50%);
+            animation: rotateGlow 40s linear infinite;
+        }
+
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-subtitle {
+            font-family: 'Philosopher', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--accent-olive);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.3s;
+        }
+
+        .hero-title {
+            font-family: 'Philosopher', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--text-dark) 0%, var(--accent-green) 50%, var(--text-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.6s;
+        }
+
+        .hero-divider {
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-green), transparent);
+            margin: 0 auto 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.9s;
+        }
+
+        .hero-quote {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-style: italic;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 1.2s;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 1.8s;
+        }
+
+        .scroll-hint span {
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .scroll-arrow {
+            width: 24px;
+            height: 36px;
+            border: 2px solid var(--accent-green);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .scroll-arrow::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 2px;
+            animation: scrollBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollBounce {
+            0%, 100% { top: 6px; opacity: 1; }
+            50% { top: 18px; opacity: 0.3; }
+        }
+
+        /* ============ SECTIONS ============ */
+        .section {
+            position: relative;
+            z-index: 1;
+            padding: 6rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Philosopher', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--accent-green);
+            position: relative;
+            display: block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--accent-green);
+            transition: width 0.8s ease;
+        }
+
+        .section-title.visible::after {
+            width: 80px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        .section-divider {
+            width: 60%;
+            max-width: 400px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(45,106,79,0.3), transparent);
+            margin: 4rem auto;
+        }
+
+        /* ============ CARDS ============ */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: linear-gradient(145deg, var(--bg-card), #ffffff);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(45,106,79,0.05), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-green);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 0 30px var(--glow-green);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .card h3 {
+            font-family: 'Philosopher', sans-serif;
+            font-size: 1.3rem;
+            color: var(--accent-green);
+            margin-bottom: 0.8rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        /* ============ RULES ============ */
+        .rules-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .rule {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(45,106,79,0.08), rgba(82,121,111,0.05));
+            border-left: 3px solid var(--accent-green);
+            border-radius: 0 12px 12px 0;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rule::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(45,106,79,0.08), transparent);
+            transition: width 0.5s ease;
+        }
+
+        .rule:hover::after {
+            width: 100%;
+        }
+
+        .rule:hover {
+            transform: translateX(10px);
+            border-left-width: 5px;
+        }
+
+        .rule-number {
+            font-family: 'Philosopher', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            min-width: 40px;
+            text-align: center;
+            transition: transform 0.4s ease;
+        }
+
+        .rule:hover .rule-number {
+            transform: scale(1.3);
+        }
+
+        .rule-text {
+            flex: 1;
+        }
+
+        .rule-text strong {
+            color: var(--accent-warm);
+            font-weight: 600;
+        }
+
+        /* ============ SLOGAN ============ */
+        .slogan-block {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin: 3rem auto;
+            max-width: 800px;
+            background: linear-gradient(135deg, rgba(45,106,79,0.06), rgba(184,134,11,0.04));
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slogan-block::before,
+        .slogan-block::after {
+            content: '"';
+            position: absolute;
+            font-family: 'Philosopher', sans-serif;
+            font-size: 8rem;
+            color: rgba(45,106,79,0.08);
+            line-height: 1;
+        }
+
+        .slogan-block::before {
+            top: -20px;
+            left: 20px;
+        }
+
+        .slogan-block::after {
+            bottom: -60px;
+            right: 20px;
+            transform: rotate(180deg);
+        }
+
+        .slogan-block p {
+            font-family: 'Philosopher', sans-serif;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--accent-green);
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============ ECONOMY PILARS ============ */
+        .pilar {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: linear-gradient(145deg, rgba(45,106,79,0.06), rgba(82,121,111,0.03));
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .pilar:hover {
+            border-color: var(--accent-green);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            transform: translateY(-4px);
+        }
+
+        .pilar-number {
+            font-family: 'Philosopher', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            opacity: 0.3;
+            line-height: 1;
+            min-width: 60px;
+            transition: opacity 0.4s ease;
+        }
+
+        .pilar:hover .pilar-number {
+            opacity: 0.8;
+        }
+
+        .pilar-content h3 {
+            font-family: 'Philosopher', sans-serif;
+            font-size: 1.4rem;
+            color: var(--accent-warm);
+            margin-bottom: 0.5rem;
+        }
+
+        .pilar-content p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* ============ EXAMPLE BLOCK ============ */
+        .example-block {
+            background: linear-gradient(145deg, rgba(45,106,79,0.06), rgba(82,121,111,0.03));
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .example-block h3 {
+            font-family: 'Philosopher', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent-green);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            transition: all 0.4s ease;
+        }
+
+        .comparison-item.before {
+            background: rgba(200,80,80,0.08);
+            border: 1px solid rgba(200,80,80,0.2);
+        }
+
+        .comparison-item.after {
+            background: rgba(45,106,79,0.08);
+            border: 1px solid rgba(45,106,79,0.2);
+        }
+
+        .comparison-item:hover {
+            transform: scale(1.02);
+        }
+
+        .comparison-item h4 {
+            font-family: 'Philosopher', sans-serif;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .comparison-item.before h4 { color: #c85050; }
+        .comparison-item.after h4 { color: var(--accent-green); }
+
+        .comparison-item p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* ============ FINAL FORMULA ============ */
+        .formula-block {
+            background: linear-gradient(135deg, rgba(45,106,79,0.06), rgba(184,134,11,0.04));
+            border: 2px solid var(--border-light);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .formula-block::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(45,106,79,0.04) 0%, transparent 60%);
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .formula-block h3 {
+            font-family: 'Philosopher', sans-serif;
+            font-size: 1.3rem;
+            color: var(--accent-warm);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .formula-text {
+            font-family: 'Philosopher', sans-serif;
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            color: var(--accent-green);
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .formula-text .highlight {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        /* ============ APPENDIX SECTION ============ */
+        .appendix-section {
+            background: linear-gradient(180deg, var(--bg-light) 0%, #e0d8c8 100%);
+            position: relative;
+            padding: 6rem 2rem;
+        }
+
+        .appendix-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-green), var(--accent-gold), var(--accent-green), transparent);
+        }
+
+        .appendix-title {
+            font-family: 'Philosopher', sans-serif;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 700;
+            text-align: center;
+            color: var(--accent-green);
+            margin-bottom: 3rem;
+            line-height: 1.4;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .appendix-card {
+            background: linear-gradient(145deg, #ffffff, var(--bg-card));
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .appendix-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            border-color: var(--accent-green);
+        }
+
+        .appendix-card h3 {
+            font-family: 'Philosopher', sans-serif;
+            font-size: 1.4rem;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .appendix-card h3 .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--accent-green);
+            color: white;
+            border-radius: 50%;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .appendix-card p, .appendix-card li {
+            color: var(--text-body);
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .appendix-card ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .appendix-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        .appendix-card strong {
+            color: var(--accent-warm);
+        }
+
+        .indicator-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .indicator-table th {
+            background: var(--accent-green);
+            color: white;
+            padding: 0.8rem;
+            text-align: left;
+            font-family: 'Philosopher', sans-serif;
+        }
+
+        .indicator-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-body);
+        }
+
+        .indicator-table tr:hover td {
+            background: rgba(45,106,79,0.04);
+        }
+
+        .flow-diagram {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        .flow-step {
+            background: var(--accent-green);
+            color: white;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            font-family: 'Philosopher', sans-serif;
+            font-size: 0.9rem;
+            text-align: center;
+            min-width: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .flow-step:hover {
+            transform: scale(1.05);
+            background: var(--accent-olive);
+        }
+
+        .flow-arrow {
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .risk-card {
+            background: rgba(200,80,80,0.05);
+            border: 1px solid rgba(200,80,80,0.15);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .risk-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        .risk-card h4 {
+            font-family: 'Philosopher', sans-serif;
+            color: #8b4513;
+            margin-bottom: 0.5rem;
+        }
+
+        .risk-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, #e0d8c8, #d4c9b0);
+            position: relative;
+        }
+
+        .footer-quote {
+            font-family: 'Philosopher', sans-serif;
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            color: var(--accent-green);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .footer-closing {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .footer-closing p {
+            margin-bottom: 1rem;
+        }
+
+        .footer-closing .final-words {
+            font-family: 'Philosopher', sans-serif;
+            font-size: 1.3rem;
+            color: var(--accent-warm);
+            margin-top: 2rem;
+        }
+
+        /* ============ ANIMATIONS ============ */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-in-delay-1 { transition-delay: 0.1s; }
+        .fade-in-delay-2 { transition-delay: 0.2s; }
+        .fade-in-delay-3 { transition-delay: 0.3s; }
+        .fade-in-delay-4 { transition-delay: 0.4s; }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .section { padding: 4rem 1.5rem; }
+            .card-grid { grid-template-columns: 1fr; }
+            .comparison { grid-template-columns: 1fr; }
+            .pilar { flex-direction: column; gap: 1rem; }
+            .rule { flex-direction: column; gap: 0.5rem; }
+            .flow-diagram { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); }
+        }
+
+        /* ============ SCROLLBAR ============ */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-cream);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-green);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Background Leaves -->
+    <div class="bg-leaves" id="leaves"></div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-subtitle">Манифест нового мира</div>
+            <h1 class="hero-title">Общество<br>Духовной Сборки</h1>
+            <div class="hero-divider"></div>
+            <p class="hero-quote">Где главное — не размер кошелька, а то, насколько ты стал спокойнее, добрее и свободнее внутри</p>
+        </div>
+        <div class="scroll-hint">
+            <span>Прокрутите вниз</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- PART 1 -->
+    <section class="section">
+        <h2 class="section-title fade-in">Часть первая. Общество Духовной Сборки</h2>
+        <p class="section-subtitle fade-in fade-in-delay-1">Философия нового уклада</p>
+
+        <div class="fade-in fade-in-delay-2" style="margin-bottom: 2rem;">
+            <p style="font-size: 1.15rem; color: var(--text-muted); text-align: center; max-width: 800px; margin: 0 auto;">
+                Деньги становятся смыслом только тогда, когда других смыслов нет. Богачи, которые вроде бы всё купили, тонут в депрессии — опыт сотен тысяч богачей вам ни о чём не говорит?
+            </p>
+        </div>
+
+        <div class="card-grid fade-in fade-in-delay-3">
+            <div class="card">
+                <span class="card-icon">🌱</span>
+                <h3>СМЫСЛ В РАЗВИТИИ</h3>
+                <p>Вместо «деньги — смысл» — развитие души. Статус даёт не яхта, а то, насколько ты научился сдерживать свои страсти и пороки и насколько ты альтруистичен.</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">🤝</span>
+                <h3>СОБОРНОСТЬ</h3>
+                <p>Вместо «каждый за себя» — круги взаимопомощи. Соседские и трудовые общины, где не просто пьют чай — там учатся контролировать эмоции, поддерживать друг друга.</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">🧘</span>
+                <h3>ОСОЗНАННАЯ ПОДГОТОВКА</h3>
+                <p>Вместо животной жизни (погоня за удовольствиями) — осознанная подготовка. Тело — временный тренажёр. Социальный лифт ведёт в состояние, когда тебе не нужно доказывать, что ты круче других.</p>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h3 class="fade-in" style="font-family: 'Philosopher', sans-serif; font-size: 1.5rem; color: var(--accent-warm); text-align: center; margin-bottom: 2rem;">Три простых правила для каждого</h3>
+
+        <div class="rules-container">
+            <div class="rule fade-in fade-in-delay-1">
+                <div class="rule-number">1</div>
+                <div class="rule-text">
+                    <p>Ты имеешь право тревожиться. Но <strong>твой долг</strong> — искать покой не в покупках, а в общине и в доверии к близким.</p>
+                </div>
+            </div>
+            <div class="rule fade-in fade-in-delay-2">
+                <div class="rule-number">2</div>
+                <div class="rule-text">
+                    <p>Ты имеешь право на удовольствие. Но <strong>обязан развиваться</strong> — учиться, двигаться, помогать.</p>
+                </div>
+            </div>
+            <div class="rule fade-in fade-in-delay-3">
+                <div class="rule-number">3</div>
+                <div class="rule-text">
+                    <p>Ты смертен, и это нормально. Душа готовится к выходу за пределы тела. Пока ты здесь, <strong>твоя задача: любить живое</strong>, не давать гневу, жадности и невежеству командовать тобой.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slogan-block fade-in">
+            <p>«Развивай дух — строй общину — выходи за пределы телесных желаний»</p>
+        </div>
+
+        <div class="card-grid fade-in">
+            <div class="card">
+                <span class="card-icon">💔➡️❤️</span>
+                <h3>Враги, которых мы оставляем</h3>
+                <p><strong>Одиночество</strong> заменяет братство и чувство локтя, которое было у наших бабушек и дедушек — не наигранное, а настоящее.<br><br><strong>Жадность</strong> заменяет служение общему делу.</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">✨</span>
+                <h3>Человек XXI века</h3>
+                <p>Не одинок, не раздавлен тревогой, знает, что страдания временны, и смотрит не вниз (на чужой кошелёк), а вверх — к тем снам, где мы уже летаем без тела и чувствуем настоящую свободу.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- PART 2 -->
+    <section class="section">
+        <h2 class="section-title fade-in">Часть вторая. Экономика, где деньги не рожают деньги</h2>
+        <p class="section-subtitle fade-in fade-in-delay-1">Стержень новой экономики: никакого ростовщического процента</p>
+
+        <div class="fade-in fade-in-delay-2" style="margin-bottom: 3rem;">
+            <p style="font-size: 1.15rem; color: var(--text-muted); text-align: center; max-width: 800px; margin: 0 auto;">
+                Мы вернём деньги на место — они станут измерителем труда и заботы, а не плетью над должником.
+            </p>
+        </div>
+
+        <h3 class="fade-in" style="font-family: 'Philosopher', sans-serif; font-size: 1.3rem; color: #c85050; text-align: center; margin-bottom: 2rem;">❌ Что запрещаем раз и навсегда</h3>
+
+        <div class="card-grid fade-in fade-in-delay-1" style="margin-bottom: 3rem;">
+            <div class="card">
+                <span class="card-icon">🚫</span>
+                <h3>Процент</h3>
+                <p>Рост денег из воздуха. Банк больше не может печатать деньги из чужих долгов.</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">🚫</span>
+                <h3>Спекуляцию</h3>
+                <p>Перекупить и перепродать, ничего не создав.</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">🚫</span>
+                <h3>Мёртвый капитал</h3>
+                <p>Когда деньги годами лежат под матрасом или на счетах и не работают.</p>
+            </div>
+        </div>
+
+        <h3 class="fade-in" style="font-family: 'Philosopher', sans-serif; font-size: 1.5rem; color: var(--accent-green); text-align: center; margin-bottom: 2rem;">🏛️ Четыре кита новой экономики</h3>
+
+        <div class="fade-in fade-in-delay-1">
+            <div class="pilar">
+                <div class="pilar-number">1</div>
+                <div class="pilar-content">
+                    <h3>Не банк, а общинная касса</h3>
+                    <p>Привычного банка с депозитами и кредитами под грабительские проценты нет. Вместо этого — общинные кредитные круги. Ты просишь у круга семян или станок. Круг даёт без процента, но договаривается: «Если дело пойдёт, мы возьмём небольшую долю от прибыли, например, десятую часть в первый год, а потом ничего». А если убыток — круг разделяет его с тобой. Никто не должен возвращать «тело плюс двадцать процентов» любой ценой.</p>
+                </div>
+            </div>
+            <div class="pilar">
+                <div class="pilar-number">2</div>
+                <div class="pilar-content">
+                    <h3>Деньги, которые «худеют» на руках</h3>
+                    <p>Чтобы деньги не копились под матрасом, а шли на развитие, они должны каждый месяц (или каждый год) немного терять в цене — скажем, пять‑шесть процентов в год, если их не тратить. Как продукты: полежат — портятся. Зато это подстёгивает пускать их в дело: дать соседу, вложить в общий проект, купить инструменты. Психология меняется сама собой: не «деньги должны работать на меня», а «деньги должны течь через меня к людям».</p>
+                </div>
+            </div>
+            <div class="pilar">
+                <div class="pilar-number">3</div>
+                <div class="pilar-content">
+                    <h3>Дары развития вместо кредитов</h3>
+                    <p>В обществе, где главное — растить человека, государство и общины собирают общие котлы. Из них выдают безвозвратные дары на учёбу, на спорт, на духовную практику, на запуск честного дела. Единственное условие: получивший дар обязан передать навык дальше — обучить двоих, помочь общине своим временем. Никаких процентов и возврата. Только цепная реакция добра.</p>
+                </div>
+            </div>
+            <div class="pilar">
+                <div class="pilar-number">4</div>
+                <div class="pilar-content">
+                    <h3>Честное слово вместо кредитной истории</h3>
+                    <p>Без процента не нужны залоги и штрафы. В общине каждый имеет репутацию — человеческую, а не цифровую. Помог, сдержал слово, поделился — тебя уважают, и тебе доверяют. Обманул, ушёл от помощи — временно теряешь доступ к общим ресурсам. Но главное: долговых тюрем нет. Долг в старом смысле исчезает. Есть только обязательство перед людьми, и его можно отработать — трудом или обучением других.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- PART 3 -->
+    <section class="section">
+        <h2 class="section-title fade-in">Часть третья. Как выглядит живой пример</h2>
+
+        <div class="example-block fade-in fade-in-delay-1">
+            <h3>📖 История пятнадцати соседей</h3>
+            <div class="comparison">
+                <div class="comparison-item before">
+                    <h4>❌ Было</h4>
+                    <p>Пятнадцать соседей решили разбить общинный огород и сделать цех по переработке овощей. В старой экономике они пошли бы в банк, взяли кредит под двадцать процентов годовых. Если дожди или засуха — урожая нет, долг остался, люди в панике разбегаются, дружба трещит по швам.</p>
+                </div>
+                <div class="comparison-item after">
+                    <h4>✅ Стало</h4>
+                    <p>Общинная касса даёт им семена, рассаду и оборудование без процента. Договор прост: если будет прибыль, касса возьмёт себе пятнадцать процентов в первый год, пять процентов во второй, а потом ноль. Если убыток — все помогают едой из других проектов. Простая взаимопомощь. Вдобавок те, кто работает в цехе, бесплатно обучают двух соседей — это условие дара на семена. Через год огород кормит всех, тревоги нет, деньги текут обратно в общинную кассу и дальше помогают другим.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-grid fade-in fade-in-delay-2">
+            <div class="card">
+                <span class="card-icon">🪷</span>
+                <h3>Отказ от процента — отказ от жадности</h3>
+                <p>Будда прямо учил: «Избавьтесь от сильных страстей». Деньги, которые «худеют» на руках, напоминают нам каждый день: цепляться за вещи и копить — пустая забава.</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">🌌</span>
+                <h3>Высшие миры</h3>
+                <p>В высших мирах нет ни зависти, ни желания содрать проценты с ближнего. Общинные круги возвращают чувство локтя, которое было раздавлено в девяностые.</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">💎</span>
+                <h3>Главные инвестиции</h3>
+                <p>Земля — полигон, и главные инвестиции здесь — не в акции, а в человеческий дух. Дары развития — это прямое признание этого.</p>
+            </div>
+        </div>
+
+        <div class="formula-block fade-in">
+            <h3>⚡ Финальная формула</h3>
+            <p class="formula-text">
+                <span class="highlight">Никакого ссудного процента</span> +<br>
+                деньги, которые «худеют» +<br>
+                общинные кассы +<br>
+                честное слово +<br>
+                дары под обязательство научить другого<br><br>
+                <span style="color: var(--accent-warm);">= экономика, в которой невозможно стать рабом долга,<br>зато легко стать лучшей версией себя</span>
+            </p>
+        </div>
+
+        <div class="slogan-block fade-in">
+            <p>«Не умножайте деньги без дела. Умножайте любовь, мастерство и заботу. Процент — это цепь для духа. Снимите её»</p>
+        </div>
+    </section>
+
+    <!-- APPENDIX: HOW TO FIND ALTRUISTS -->
+    <section class="appendix-section">
+        <div class="section" style="max-width: 1000px; margin: 0 auto;">
+            <h2 class="appendix-title fade-in">
+                НЕЛЬЗЯ ПОСТРОИТЬ ОБЩЕСТВО БУДУЩЕГО<br>БЕЗ УПРАВЛЕНЦЕВ-АЛЬТРУИСТОВ<br>
+                <span style="color: var(--accent-gold); font-size: 0.8em;">КАК ИХ ИСКАТЬ?</span>
+            </h2>
+            <p class="section-subtitle fade-in fade-in-delay-1">Практическая инструкция по отбору</p>
+
+            <!-- Psychological Profile -->
+            <div class="appendix-card fade-in fade-in-delay-1">
+                <h3><span class="num">1</span> Психологический профиль альтруиста</h3>
+                <div class="card-grid" style="margin-top: 1rem;">
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">💚</span>
+                        <h3>Эмпатия</h3>
+                        <p>Быстро замечает чужую боль, умеет сопереживать без назидания и не отстраняется от трудных эмоций. Способен увидеть ситуацию глазами другого.</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">🪞</span>
+                        <h3>Саморефлексия</h3>
+                        <p>Умеет анализировать свои поступки, признавать ошибки и менять поведение после обратной связи. Это снижает конфликтность и повышает личную зрелость.</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">🤲</span>
+                        <h3>Бескорыстие</h3>
+                        <p>Помогает без расчёта на благодарность, не торгуется за признание и не превращает помощь в обмен услугами. Важен сам факт полезного действия.</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">🧠</span>
+                        <h3>Осознанность</h3>
+                        <p>Действует не на автомате: замечает мотивы, сдерживает импульсы и выбирает поведение, которое служит делу, а не сиюминутной эмоции.</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem; grid-column: 1 / -1;">
+                        <span class="card-icon">⚖️</span>
+                        <h3>Ответственность</h3>
+                        <p>Берёт обязательства всерьёз: доводит начатое до конца, держит слово и не исчезает при первых трудностях. Надёжность для него важнее удобства.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indicators Table -->
+            <div class="appendix-card fade-in fade-in-delay-2">
+                <h3><span class="num">2</span> Признаки и наблюдаемые индикаторы</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-muted);">Краткая схема, по которой можно оценивать человека в реальном общении и совместных делах. Лучше всего работают <strong>поведенческие признаки</strong>, а не самоописание. Надёжность видна в действиях, повторяемых в обычных и напряжённых условиях.</p>
+                <table class="indicator-table">
+                    <thead>
+                        <tr>
+                            <th>Признак</th>
+                            <th>Проявление</th>
+                            <th>Подтверждение</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Эмпатия</strong></td>
+                            <td>Чувствует боль</td>
+                            <td>Слушает и откликается</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Бескорыстие</strong></td>
+                            <td>Помогает без выгоды</td>
+                            <td>Не ждёт возврата</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ответственность</strong></td>
+                            <td>Доводит дело</td>
+                            <td>Соблюдает сроки</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Саморефлексия</strong></td>
+                            <td>Разбирает ошибки</td>
+                            <td>Принимает обратную связь</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Осознанность</strong></td>
+                            <td>Не действует импульсивно</td>
+                            <td>Сначала оценивает ситуацию</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Selection Process -->
+            <div class="appendix-card fade-in fade-in-delay-1">
+                <h3><span class="num">3</span> Как последовательно выявить альтруиста</h3>
+                <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Практический отбор по наблюдению, совместным задачам, стрессу и глубинному интервью.</p>
+                <div class="flow-diagram">
+                    <div class="flow-step">Наблюдение<br>3–4 недели</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Малые просьбы<br>о помощи</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Совместный<br>проект 2–4 недели</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Кризисная<br>ситуация</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Финансовый<br>тест</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Глубинное<br>интервью</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step" style="background: var(--accent-gold); color: var(--text-dark);">Ядро<br>сообщества</div>
+                </div>
+            </div>
+
+            <!-- Deep Interview Questions -->
+            <div class="appendix-card fade-in fade-in-delay-2">
+                <h3><span class="num">4</span> Вопросы глубинного интервью</h3>
+                <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Попросите объяснить, что для него значит стать лучшей версией себя. Ответ должен показывать стремление к дисциплине, честности, зрелости и полезности для других.</p>
+                <div class="card-grid" style="margin-top: 1rem;">
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">❓</span>
+                        <h3>Что мотивирует</h3>
+                        <p>Спросите, что именно побуждает человека помогать другим. Важны не красивые формулировки, а <strong>конкретные истории</strong>, где мотивацией были долг, сочувствие или внутреннее убеждение.</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">🎁</span>
+                        <h3>Помощь без признания</h3>
+                        <p>Уточните, был ли опыт поддержки без благодарности и видимого возврата. Надёжный кандидат описывает такие ситуации спокойно, без обиды и ожидания компенсации.</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">💰</span>
+                        <h3>Готовность жертвовать</h3>
+                        <p>Спросите, готов ли он отдавать время и деньги ради общего блага. Сильный сигнал — <strong>спокойная готовность</strong> участвовать без гарантий личной выгоды.</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">💔</span>
+                        <h3>Реакция на боль</h3>
+                        <p>Важно понять, как человек ведёт себя перед чужим страданием: избегает, сочувствует или действует. Здесь особенно ценны примеры <strong>реальной помощи</strong>, а не общие заявления.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Where to Search -->
+            <div class="appendix-card fade-in fade-in-delay-1">
+                <h3><span class="num">5</span> Где искать людей с высокой просоциальностью</h3>
+                <div class="card-grid" style="margin-top: 1rem;">
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">🙋</span>
+                        <h3>Волонтёрские среды</h3>
+                        <p>Самые надёжные кандидаты чаще всего находятся в волонтёрских организациях, экологических акциях, помощи пожилым, бездомным и в приютах для животных — где помощь уже стала нормой.</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">🏛️</span>
+                        <h3>НКО и социальные проекты</h3>
+                        <p>Некоммерческие организации и социальные предприятия отбирают людей по готовности работать ради результата, а не ради статуса. Здесь проще увидеть дисциплину, командность и устойчивую мотивацию.</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">👩‍🏫</span>
+                        <h3>Помогающие профессии</h3>
+                        <p>Педагоги, врачи и социальные работники регулярно сталкиваются с чужой уязвимостью. Среди них выше доля людей, привыкших отвечать за других и сохранять уважение к слабому.</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">🧘</span>
+                        <h3>Духовные и практики роста</h3>
+                        <p>Йога-студии, буддийские группы и сообщества саморазвития могут быть полезным дополнительным каналом, если там поощряются честность, служение и внутренняя работа над собой.</p>
+                    </div>
+                    <div class="card" style="padding: 1.5rem;">
+                        <span class="card-icon">📚</span>
+                        <h3>Профессиональные конференции</h3>
+                        <p>Учительские и медицинские конференции помогают найти людей, для которых забота о других — часть профессии. Но проверка всё равно нужна: статус не равен альтруизму.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risks -->
+            <div class="appendix-card fade-in fade-in-delay-2">
+                <h3><span class="num">6</span> Риски и ограничения альтруистического отбора</h3>
+                <div class="risk-grid">
+                    <div class="risk-card">
+                        <h4>🔥 Выгорание</h4>
+                        <p>Даже самые мотивированные люди истощаются, если на них постоянно держится вся нагрузка. Поэтому важны лимиты задач, ротация ролей и регулярный отдых без чувства вины.</p>
+                    </div>
+                    <div class="risk-card">
+                        <h4>🕸️ Созависимость и размытые границы</h4>
+                        <p>Стремление спасать всех может превращаться в зависимость от чужих проблем. Защищают прозрачные роли, понятные правила участия и умение отказывать без агрессии.</p>
+                    </div>
+                    <div class="risk-card">
+                        <h4>🎭 Псевдоальтруизм</h4>
+                        <p>Некоторые демонстрируют помощь ради статуса, влияния или признания. Проверка нужна по повторяемости поступков, особенно в ситуациях, где нет выгоды и внешнего наблюдения.</p>
+                    </div>
+                    <div class="risk-card">
+                        <h4>👑 Моральное превосходство</h4>
+                        <p>Опасно считать себя лучше других только из-за деклараций о доброте. Регулярная рефлексия, проверка реальных результатов и уважение к иным взглядам удерживают команду от высокомерия.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final Words -->
+            <div class="slogan-block fade-in" style="margin-top: 3rem;">
+                <p style="color: var(--accent-green);">«Будущее строится не идеями, а людьми»</p>
+                <p style="font-size: 1rem; color: var(--text-muted); margin-top: 1rem; font-family: 'Cormorant Garamond', serif;">Устойчивое общество начинается с небольшого ядра людей, способных к эмпатии, ответственности и росту. Их находят в реальных делах, проверяют временем и укрепляют культурой доверия.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="fade-in">
+            <p class="footer-quote">«Мы не обещаем земного рая — его и не будет, потому что Земля по замыслу архитектора — стартовая площадка для перехода»</p>
+            <div class="footer-closing">
+                <p>Но мы обещаем, что жить станет легче.</p>
+                <p><strong>Меньше тревоги</strong> — потому что ты не один.</p>
+                <p><strong>Меньше жадности</strong> — потому что копить бессмысленно.</p>
+                <p><strong>Больше свободы</strong> — потому что долги не душат.</p>
+                <p><strong>Больше надежды</strong> — потому что каждое маленькое страдание знает свой срок, а душа движется вверх.</p>
+                <p class="final-words">Развивайся, общайся, служи. И тогда Великий Архитектор, возможно, посмотрит на нас и признает не безнадёжными. А значит, заслуживающими права на жизнь.</p>
+            </div>
+        </div>
+
+        Антон Дерябин 2026г.Бор-Нижний Новгород
+    </footer>
+
+    <script>
+        // Generate floating leaves
+        const leavesContainer = document.getElementById('leaves');
+        for (let i = 0; i < 25; i++) {
+            const leaf = document.createElement('div');
+            leaf.className = 'leaf';
+            leaf.style.left = Math.random() * 100 + '%';
+            leaf.style.top = Math.random() * 100 + '%';
+            leaf.style.setProperty('--duration', (8 + Math.random() * 12) + 's');
+            leaf.style.setProperty('--max-opacity', 0.3 + Math.random() * 0.5);
+            leaf.style.setProperty('--size', (0.8 + Math.random() * 1.5) + 'rem');
+            leaf.style.animationDelay = Math.random() * 10 + 's';
+            leavesContainer.appendChild(leaf);
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in, .section-title').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
